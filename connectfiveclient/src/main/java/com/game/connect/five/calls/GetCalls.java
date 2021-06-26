@@ -15,11 +15,6 @@ public class GetCalls {
         con.setRequestMethod("GET");
         con.setConnectTimeout(5000);
         con.setReadTimeout(5000);
-
-        con.setRequestProperty("User-Agent", "Mozilla/5.0");
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'GET' request to URL : " + url);
-        System.out.println("Response Code : " + responseCode);
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
         StringBuffer response = new StringBuffer();
@@ -27,9 +22,8 @@ public class GetCalls {
             response.append(inputLine);
         }
         in.close();
-        // print in String
-        System.out.println(response.toString());
 
-        return null;
+        con.disconnect();
+        return response.toString();
     }
 }
