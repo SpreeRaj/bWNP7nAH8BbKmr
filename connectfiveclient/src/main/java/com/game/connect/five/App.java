@@ -28,8 +28,8 @@ public final class App {
         System.out.println();
         do {
 
-            System.out.println("1.Start a new game");
-            System.out.println("2.Join current game");
+            System.out.println("1. Start a new game");
+            System.out.println("2. Join current game");
             System.out.println("3. Exit game");
             System.out.print("Enter choice: ");
             choice = sc.nextInt();
