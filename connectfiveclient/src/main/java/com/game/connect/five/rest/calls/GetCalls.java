@@ -1,4 +1,4 @@
-package com.game.connect.five.calls;
+package com.game.connect.five.rest.calls;
 
 import java.io.BufferedReader;
 import java.io.IOException;
