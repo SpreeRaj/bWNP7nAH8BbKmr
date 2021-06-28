@@ -1,13 +1,22 @@
 package com.game.connect.five.connectfiveserver.controller;
 
-import com.game.connect.five.connectfiveserver.model.GameBoard;
+import java.util.Map;
+
+import javax.websocket.server.PathParam;
+
+import com.game.connect.five.connectfiveserver.model.Game;
+import com.game.connect.five.connectfiveserver.model.GameBoardSize;
+import com.game.connect.five.connectfiveserver.model.Player;
 import com.game.connect.five.connectfiveserver.service.GameManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +26,8 @@ public class GameController {
 
     @Autowired
     GameManager gameManager;
-    GameBoard gameBoard;
+    @Autowired
+    Game game;
 
     @GetMapping("/welcome")
     public String helloWorld() {
@@ -25,17 +35,31 @@ public class GameController {
     }
 
     @GetMapping("/getGameStatus")
-    public @ResponseBody GameManager getGameStatus() {
-        return gameManager;
+    public @ResponseBody Game getGameStatus() {
+        return game;
 
     }
 
-    @PostMapping(value = "/startNewGame", produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody GameManager StartNewGame(String playerName, String PlayerToken, int boardRow,
-            int boardColumn) {
-        gameManager.startNewGame(playerName, PlayerToken, boardRow, boardColumn);
-        return gameManager;
+    @PutMapping("/startNewGame")
+    public @ResponseBody Game StartNewGame(@RequestBody GameBoardSize gameBoardSize) {
+        String status = gameManager.startNewGame(gameBoardSize);
+        return game;
+    }
 
+    @PutMapping("/addPlayerDetails")
+    public @ResponseBody String AddPlayerDetails(@RequestParam String playerName,
+            @RequestParam String playerTokenColor) {
+        Player player = gameManager.addPlayerDetails(playerName, playerTokenColor);
+        if (player != null)
+            return player.getUniqueID();
+        else
+            return "Game Full";
+    }
+
+    @PostMapping("/move/{playerId}")
+    public @ResponseBody Game makeMove(@RequestParam int column, @PathVariable String playerId) {
+        String status = gameManager.updateBoard(column,playerId);
+        return game;
     }
 
 }

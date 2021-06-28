@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Component
-@Getter @Setter
+@Getter@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GameBoard extends GameBoardSize {
-
-    private String board[][];
-
+public class GameBoardSize {
+    
+    private int row;
+    private int column;
 }
