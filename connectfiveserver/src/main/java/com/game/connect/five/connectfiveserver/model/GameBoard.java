@@ -14,5 +14,8 @@ import lombok.Setter;
 public class GameBoard extends GameBoardSize {
 
     private String board[][];
+    //this is a connect 5 game therefore win size is set default 5
+    //Change as per need
+    private int winSize=5;
 
 }
