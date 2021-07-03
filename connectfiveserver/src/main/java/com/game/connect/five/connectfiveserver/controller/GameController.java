@@ -41,8 +41,8 @@ public class GameController {
     }
 
     @PutMapping("/startNewGame")
-    public @ResponseBody Game StartNewGame(@RequestBody GameBoardSize gameBoardSize) {
-        String status = gameManager.startNewGame(gameBoardSize);
+    public @ResponseBody Game StartNewGame(@RequestParam int row, @RequestParam int column) {
+        String status = gameManager.startNewGame(new GameBoardSize(row,column));
         return game;
     }
 

@@ -10,7 +10,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 @SpringBootApplication
 public class ConnectclientApplication {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		ConfigurableApplicationContext context = SpringApplication.run(ConnectclientApplication.class, args);
 		GamePlay gamePlay = context.getBean(GamePlay.class);
 		gamePlay.gamePlayHandler();

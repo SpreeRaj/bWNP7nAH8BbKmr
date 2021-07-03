@@ -1,16 +1,17 @@
 package com.game.connect.five.connectclient.service;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.game.connect.five.connectclient.model.RequestSetup;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jackson.JsonObjectSerializer;
 import org.springframework.stereotype.Component;
 
 import lombok.Getter;
@@ -21,17 +22,17 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class GetCalls {
-
+public class PutCalls {
     @Autowired
     RequestSetup requestSetup;
 
-    public String callWelcomeApi() throws IOException {
+    //URLEncoder.encode(pair.getName(), "UTF-8")
 
-        requestSetup.setUrl(new URL(requestSetup.getHost() + "welcome"));
+    public String setupGame(int row, int column) throws Exception {
+        requestSetup.setUrl(new URL(requestSetup.getHost() + "startNewGame?row="+row+"&column="+column));
         requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
         HttpURLConnection con = requestSetup.getCon();
-        con.setRequestMethod("GET");
+        con.setRequestMethod("PUT");
         con.setConnectTimeout(5000);
         con.setReadTimeout(5000);
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -43,14 +44,15 @@ public class GetCalls {
         in.close();
 
         con.disconnect();
+        //System.out.println(response.toString());
         return response.toString();
     }
 
-    public String callGameStatusApi() throws IOException {
-        requestSetup.setUrl(new URL(requestSetup.getHost() + "getGameStatus"));
+    public String addNewPlayer(String playerName, String playerToken)throws Exception {
+        requestSetup.setUrl(new URL(requestSetup.getHost() + "addPlayerDetails?playerName="+playerName+"&playerTokenColor="+playerToken));
         requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
         HttpURLConnection con = requestSetup.getCon();
-        con.setRequestMethod("GET");
+        con.setRequestMethod("PUT");
         con.setConnectTimeout(5000);
         con.setReadTimeout(5000);
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -62,8 +64,13 @@ public class GetCalls {
         in.close();
 
         con.disconnect();
-       // System.out.println(response.toString());
+        System.out.println(response.toString());
         return response.toString();
     }
+
+    
+
+
+
 
 }
