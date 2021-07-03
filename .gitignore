@@ -30,3 +30,5 @@ connectclient/.settings/*
 connectclient/HELP.md
 connectclient/.classpath
 connectclient/.factorypath
+connectfiveserver/bin/*
+
