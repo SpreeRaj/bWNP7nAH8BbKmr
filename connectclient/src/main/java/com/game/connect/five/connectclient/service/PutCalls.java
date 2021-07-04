@@ -3,15 +3,11 @@ package com.game.connect.five.connectclient.service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.game.connect.five.connectclient.model.RequestSetup;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -74,8 +70,8 @@ public class PutCalls {
         requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
         HttpURLConnection con = requestSetup.getCon();
         con.setRequestMethod("PUT");
-        con.setConnectTimeout(5000);
-        con.setReadTimeout(5000);
+        con.setConnectTimeout(500000);
+        con.setReadTimeout(500000);
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
         StringBuffer response = new StringBuffer();

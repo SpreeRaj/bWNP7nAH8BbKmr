@@ -1,10 +1,9 @@
 package com.game.connect.five.connectclient.util;
 
-import java.util.ArrayList;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.game.connect.five.connectclient.model.Board;
 import com.game.connect.five.connectclient.model.Game;
 
 import org.json.JSONArray;
@@ -19,8 +18,6 @@ public class ResponseMapper {
 
     @Autowired
     Game game;
-    @Autowired
-    Board board;
 
     public void updateGameObject(String response) {
 
@@ -71,7 +68,11 @@ public class ResponseMapper {
         JSONObject json = new JSONObject(response);
         JSONObject data = json.getJSONObject("currentPlayer");
         String playerId=(String) data.get("uniqueID");
-
+        try{
+            JSONObject data2 = json.getJSONObject("winningPlayer");
+            String winningPlayerId=(String) data2.get("uniqueID");
+            this.game.setWinningPlayerId(winningPlayerId);
+        }catch(Exception e){}
         return playerId.toString();
     }
 

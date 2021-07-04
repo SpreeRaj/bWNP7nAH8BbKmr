@@ -1,6 +1,6 @@
 package com.game.connect.five.connectclient.model;
 
-import org.springframework.context.annotation.Scope;
+
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +26,7 @@ public class Game {
 
    private String currentPlayer;
    private String clientPlayerID;
+   private String winningPlayerId;
 
    private String gameState;
    

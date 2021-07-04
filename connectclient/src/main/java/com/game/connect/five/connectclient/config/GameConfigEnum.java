@@ -2,8 +2,7 @@ package com.game.connect.five.connectclient.config;
 
 import org.springframework.stereotype.Component;
 
-import lombok.Getter;
-import lombok.Setter;
+
 
 @Component
 public class GameConfigEnum {

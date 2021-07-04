@@ -27,18 +27,22 @@ public class BoardHandler {
     private long boardCapacity;
     
     private boolean winnerFlag=false;
+    private Player winningPlayer;
 
     public String addToken(int column, String playerId) {
 
-        String returnValue = "";
         String[][] board = this.game.getGameBoard().getBoard();
 
-        
+        if(!(column>=1 && column<=this.game.getGameBoard().getColumn()-1))
+            return AddTokenResponse.INVALID_COLUMN.name();
 
         if (this.boardCapacity > 0) {
             if (this.boardTop[column - 1] <= this.game.getGameBoard().getRow() - 1) {
                 board[this.boardTop[column - 1]][column - 1] = this.currentPlayer.getPlayerTokenColor();
                 this.winnerFlag = this.calculateWinner(this.boardTop[column - 1], column - 1);
+                if(this.winnerFlag){
+                    this.winningPlayer=this.currentPlayer;
+                }
                 this.boardTop[column - 1]++;
                 this.boardCapacity--; 
                 return AddTokenResponse.TOKEN_ADDED.name();

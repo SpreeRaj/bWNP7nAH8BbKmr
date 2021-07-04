@@ -2,20 +2,16 @@ package com.game.connect.five.connectclient.play;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Scanner;
 
 import com.game.connect.five.connectclient.config.GameConfig;
-import com.game.connect.five.connectclient.config.GameConfigEnum.*;
-import com.game.connect.five.connectclient.model.Board;
+import com.game.connect.five.connectclient.config.GameConfigEnum.GameState;
 import com.game.connect.five.connectclient.model.Game;
 import com.game.connect.five.connectclient.service.GetCalls;
 import com.game.connect.five.connectclient.service.PutCalls;
 import com.game.connect.five.connectclient.util.ResponseMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.JsonParser;
-import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,15 +27,18 @@ public class GamePlay {
     private Game game;
     @Autowired
     GameConfig gameConfig;
-    @Autowired
-    Board board;
 
     private Scanner sc = new Scanner(System.in);
 
     public void gamePlayHandler() throws Exception {
 
         // Step 1 loadWelcomeScreen
-        this.loadWelcomeScreen();
+        try{
+            this.loadWelcomeScreen();
+        }catch(Exception e){
+            System.out.println("Error Connecting to Server : Please check server Status");
+            System.exit(0);
+        }    
 
         // Step 2 identifyGameStatus
         this.game.setGameState(this.identifyGameStatus());
@@ -67,35 +66,69 @@ public class GamePlay {
             System.out.println("Starting Game in " + i + "...");
         }
         // Step 4 Play game
-        String winner = null;
+        boolean winnerFlag = false;
         int i = 0;
-        while (winner == null) {
-            i=0;
+        while (winnerFlag == false) {
+            i = 0;
             while (true) {
 
-                
-                String currentPlayerStatus = this.pollCurrentPlayer();
+                String currentPlayerStatus = this.pollGame();
+                if(this.game.getWinningPlayerId() != null)
+                {
+                     winnerFlag=true;
+                     break;
+                }
                 if (currentPlayerStatus.equals(this.game.getClientPlayerID())) {
                     break;
                 }
                 Thread.sleep(1000);
-                if(i%15==0){
-                  //  System.out.println("Waiting for opponent to make the move ...");
+                if (i % 20 == 0) {
+                     System.out.println("Waiting for opponent to make the move ...");
                 }
                 i++;
 
             }
+            if(winnerFlag){
+                break;
+            }
             System.out.println();
             this.displayBoard();
             System.out.println();
-            System.out.print("Make your move --> Enter Column : ");
-            String move = String.valueOf(sc.next().charAt(0));
-            String updateResponse = this.updateBoard(move);
-            System.out.println(updateResponse);
+            do {
+                System.out.print("Make your move --> Enter Column : ");
+                String move = String.valueOf(sc.next());
+                try{
+                    Integer.parseInt(move);
+                }catch(Exception e){
+                    System.out.println("Error in Input : Enter a number  ");
+                    continue;
+                }
+                String updateResponse = this.updateBoard(move);
+                System.out.println(updateResponse);
+                if (updateResponse.equals("INVALID_COLUMN")) {
+                    System.out.println("Invalid column input : Re-Enter : ");
+                    continue;
+                } else if (updateResponse.equals("WINNER")) {
+                    this.pollGame();
+                    winnerFlag = true;
+                }
+                break;   
+            } while (true);
             System.out.println();
             this.displayBoard();
             System.out.println();
-        } 
+        }
+        //Step 5 Display winner
+        this.printWinner();   
+    }
+
+    private void printWinner() {
+        System.out.println(this.game.getClientPlayerID());
+        System.out.println(this.game.getWinningPlayerId());
+        if(this.game.getClientPlayerID().equals(this.game.getWinningPlayerId()))
+            System.out.println("You Win !!!");
+        else
+            System.out.println("You Lose !!!"); 
     }
 
     private String updateBoard(String move) throws IOException {
@@ -103,7 +136,7 @@ public class GamePlay {
         return response;
     }
 
-    private String pollCurrentPlayer() throws Exception {
+    private String pollGame() throws Exception {
         String playerId = responseMapper.getCurrentPlayer(getCalls.callBoardStatusApi());
         return playerId;
     }
@@ -141,23 +174,33 @@ public class GamePlay {
         }
         System.out.print("Enter Name : ");
         String playerName = sc.next();
-        if (this.game.getGameState().equals(GameState.NEW.name())) {
-            for (int i = 1; i <= gameConfig.getPlayerToken().length; i++)
-                System.out.println(i + ". " + gameConfig.getPlayerToken()[i - 1]);
-        }
         ArrayList<String> tokenList = new ArrayList<>();
-        if (this.game.getGameState().equals(GameState.WAITING.name())) {
+        if (this.game.getGameState().equals(GameState.NEW.name())) {
+            for (int i = 0; i < gameConfig.getPlayerToken().length; i++)
+                tokenList.add(gameConfig.getPlayerToken()[i]);
+            // System.out.println(i + ". " + gameConfig.getPlayerToken()[i - 1]);
+        }
 
+        if (this.game.getGameState().equals(GameState.WAITING.name())) {
             for (int i = 0; i < gameConfig.getPlayerToken().length; i++) {
                 if (!(this.game.getPlayer1TokenColor().equals(gameConfig.getPlayerToken()[i])))
                     tokenList.add(gameConfig.getPlayerToken()[i]);
             }
 
+        }
+        String choice = "";
+        do {
             for (int i = 1; i <= tokenList.size(); i++)
                 System.out.println(i + ". " + tokenList.get(i - 1));
-        }
-        System.out.print("Choose token Colour: ");
-        String choice = String.valueOf(sc.next().charAt(0));
+            System.out.print("Choose token Colour: ");
+            choice = String.valueOf(sc.next().charAt(0));
+            try {
+                if (Integer.parseInt(choice) >= 1 && Integer.parseInt(choice) <= tokenList.size())
+                    break;
+            } catch (Exception e) {
+            }
+            System.out.println("Incorrect Choice: Please choose correct option from list");
+        } while (true);
         String playerToken = "";
         if (this.game.getGameState().equals(GameState.NEW.name()))
             playerToken = gameConfig.getPlayerToken()[Integer.parseInt(choice) - 1];
@@ -168,9 +211,10 @@ public class GamePlay {
 
     private void loadWelcomeScreen() throws IOException {
         // Starting Game
+        String response=getCalls.callWelcomeApi();
         System.out.println("*********************************");
         System.out.print("*    ");
-        System.out.print(getCalls.callWelcomeApi());
+        System.out.print(response);
         System.out.println("      *");
         System.out.println("*********************************");
     }
