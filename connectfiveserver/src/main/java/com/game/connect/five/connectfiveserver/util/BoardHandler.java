@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import com.game.connect.five.connectfiveserver.config.GameConfigEnum.*;
 
 @Component
 @Getter
@@ -24,6 +25,7 @@ public class BoardHandler {
     private Player currentPlayer;
     private String GameStatus;
     private long boardCapacity;
+    
     private boolean winnerFlag=false;
 
     public String addToken(int column, String playerId) {
@@ -39,13 +41,13 @@ public class BoardHandler {
                 this.boardTop[column - 1]++;
                 this.boardCapacity--;
                  this.winnerFlag = this.calculateWinner(this.boardTop[column - 1], column - 1);
-                returnValue = "Token added";
+                returnValue = AddTokenResponse.TOKEN_ADDED.name();
             } else {
-                returnValue = "Row Full";
+                returnValue = AddTokenResponse.COLUMN_FULL.name();
             }
         }
 
-        return "Update Error";
+        return AddTokenResponse.UPDATE_ERROR.name();
     }
 
     private boolean calculateWinner(int row, int column) {

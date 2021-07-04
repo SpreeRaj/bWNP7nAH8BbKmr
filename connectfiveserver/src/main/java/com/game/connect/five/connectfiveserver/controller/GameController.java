@@ -8,6 +8,7 @@ import com.game.connect.five.connectfiveserver.model.Game;
 import com.game.connect.five.connectfiveserver.model.GameBoardSize;
 import com.game.connect.five.connectfiveserver.model.Player;
 import com.game.connect.five.connectfiveserver.service.GameManager;
+import com.game.connect.five.connectfiveserver.util.BoardHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,8 @@ public class GameController {
     GameManager gameManager;
     @Autowired
     Game game;
+    @Autowired
+    BoardHandler boardHandler;
 
     @GetMapping("/welcome")
     public String helloWorld() {
@@ -37,6 +40,12 @@ public class GameController {
     @GetMapping("/getGameStatus")
     public @ResponseBody Game getGameStatus() {
         return game;
+
+    }
+
+    @GetMapping("/getBoardStatus")
+    public @ResponseBody BoardHandler getBoardStatus() {
+        return boardHandler;
 
     }
 
@@ -56,10 +65,10 @@ public class GameController {
             return "Game Full";
     }
 
-    @PostMapping("/move/{playerId}")
-    public @ResponseBody Game makeMove(@RequestParam int column, @PathVariable String playerId) {
+    @PutMapping("/move/{playerId}")
+    public @ResponseBody String makeMove(@RequestParam int column, @PathVariable String playerId) {
         String status = gameManager.updateBoard(column,playerId);
-        return game;
+        return status;
     }
 
 }

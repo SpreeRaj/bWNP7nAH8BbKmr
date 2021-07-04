@@ -1,5 +1,6 @@
 package com.game.connect.five.connectfiveserver.service;
 
+import com.game.connect.five.connectfiveserver.config.GameConfigEnum.*;
 import com.game.connect.five.connectfiveserver.model.Game;
 import com.game.connect.five.connectfiveserver.model.GameBoardSize;
 import com.game.connect.five.connectfiveserver.model.Player;
@@ -23,6 +24,7 @@ public class GameManager {
     private Game game;
     @Autowired
     private BoardHandler boardHandler;
+    
 
     public String startNewGame(GameBoardSize gameBoardSize) {
 
@@ -63,17 +65,18 @@ public class GameManager {
        
         if (!(this.game.getPlayer1().getUniqueID().equals(playerId)
                 || this.game.getPlayer2().getUniqueID().equals(playerId))) {
-            return "Invalid Player";
+                    
+                return AddTokenResponse.INVALID_PLAYER.name(); 
         }
         else if(this.boardHandler.getCurrentPlayer().getUniqueID().equals(playerId)){
             this.boardHandler.addToken(column,playerId);
         }
         else{
-            return "Not your turn";
+            return AddTokenResponse.WRONG_TURN.name();
         }
         if(this.boardHandler.isWinnerFlag())
         {
-            return "Winner";
+            return AddTokenResponse.WINNER.name();
         }
         else{
             if(this.game.getPlayer1().getUniqueID().equals(playerId))
@@ -84,7 +87,7 @@ public class GameManager {
                 this.boardHandler.setCurrentPlayer(this.game.getPlayer1());
             }
         }
-        return "Token added";
+        return AddTokenResponse.TOKEN_ADDED.name();
     }
 
 }

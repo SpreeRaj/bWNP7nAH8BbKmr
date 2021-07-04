@@ -1,6 +1,7 @@
 package com.game.connect.five.connectclient.service;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -67,6 +68,28 @@ public class PutCalls {
         System.out.println(response.toString());
         return response.toString();
     }
+
+    public String callMakeMoveApi(String move, String playerId) throws IOException {
+        requestSetup.setUrl(new URL(requestSetup.getHost() +"/move/"+playerId+ "?column="+move));
+        requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
+        HttpURLConnection con = requestSetup.getCon();
+        con.setRequestMethod("PUT");
+        con.setConnectTimeout(5000);
+        con.setReadTimeout(5000);
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        con.disconnect();
+        //System.out.println(response.toString());
+        return response.toString();
+    }
+
+    
 
     
 

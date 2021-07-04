@@ -28,6 +28,6 @@ public class Game {
    private String clientPlayerID;
 
    private String gameState;
-   private String board[][];
+   
     
 }

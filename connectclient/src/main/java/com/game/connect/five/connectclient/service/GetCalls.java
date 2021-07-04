@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
@@ -48,6 +49,26 @@ public class GetCalls {
 
     public String callGameStatusApi() throws IOException {
         requestSetup.setUrl(new URL(requestSetup.getHost() + "getGameStatus"));
+        requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
+        HttpURLConnection con = requestSetup.getCon();
+        con.setRequestMethod("GET");
+        con.setConnectTimeout(5000);
+        con.setReadTimeout(5000);
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        con.disconnect();
+       // System.out.println(response.toString());
+        return response.toString();
+    }
+
+    public String callBoardStatusApi() throws Exception {
+        requestSetup.setUrl(new URL(requestSetup.getHost() + "getBoardStatus"));
         requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
         HttpURLConnection con = requestSetup.getCon();
         con.setRequestMethod("GET");
