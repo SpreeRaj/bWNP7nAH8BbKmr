@@ -1,21 +1,16 @@
 package com.game.connect.five.connectfiveserver.controller;
 
-import java.util.Map;
-
-import javax.websocket.server.PathParam;
-
 import com.game.connect.five.connectfiveserver.model.Game;
 import com.game.connect.five.connectfiveserver.model.GameBoardSize;
 import com.game.connect.five.connectfiveserver.model.Player;
 import com.game.connect.five.connectfiveserver.service.GameManager;
+import com.game.connect.five.connectfiveserver.service.SessionManager;
 import com.game.connect.five.connectfiveserver.util.BoardHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,6 +26,8 @@ public class GameController {
     Game game;
     @Autowired
     BoardHandler boardHandler;
+    @Autowired
+    SessionManager sessionManager;
 
     @GetMapping("/welcome")
     public String helloWorld() {
@@ -70,5 +67,7 @@ public class GameController {
         String status = gameManager.updateBoard(column,playerId);
         return status;
     }
+
+    
 
 }

@@ -76,4 +76,13 @@ public class ResponseMapper {
         return playerId.toString();
     }
 
+    public String getCurrentPlayerStatus(String response) {
+        JSONObject json = new JSONObject(response);
+        JSONObject data = json.getJSONObject("currentPlayer");
+        String playerStatus=(String) data.get("playerStatus");
+      //  System.out.println(playerStatus);
+        
+        return playerStatus.toString();
+    }
+
 }

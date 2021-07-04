@@ -62,7 +62,6 @@ public class GameManager {
     }
 
     public String updateBoard(int column, String playerId) {
-        boolean flagTokenAdded=true;
         if (!(this.game.getPlayer1().getUniqueID().equals(playerId)
                 || this.game.getPlayer2().getUniqueID().equals(playerId))) {
                     

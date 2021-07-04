@@ -30,8 +30,8 @@ public class PutCalls {
         requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
         HttpURLConnection con = requestSetup.getCon();
         con.setRequestMethod("PUT");
-        con.setConnectTimeout(5000);
-        con.setReadTimeout(5000);
+        con.setConnectTimeout(5000000);
+        con.setReadTimeout(5000000);
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
         StringBuffer response = new StringBuffer();
@@ -50,8 +50,8 @@ public class PutCalls {
         requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
         HttpURLConnection con = requestSetup.getCon();
         con.setRequestMethod("PUT");
-        con.setConnectTimeout(5000);
-        con.setReadTimeout(5000);
+        con.setConnectTimeout(5000000);
+        con.setReadTimeout(5000000);
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String inputLine;
         StringBuffer response = new StringBuffer();
@@ -83,6 +83,44 @@ public class PutCalls {
         con.disconnect();
         //System.out.println(response.toString());
         return response.toString();
+    }
+
+    public void callOpponentUpdateStatus(String clientPlayerID) throws Exception {
+        requestSetup.setUrl(new URL(requestSetup.getHost() +"session/updateOpponentStatus/"+clientPlayerID));
+        requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
+        HttpURLConnection con = requestSetup.getCon();
+        con.setRequestMethod("PUT");
+        con.setConnectTimeout(5000000);
+        con.setReadTimeout(5000000);
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        con.disconnect();
+        //System.out.println(response.toString());
+        //return response.toString();
+    }
+
+    public void callCurrentPlayerUpdateStatus(String clientPlayerID) throws Exception{
+        requestSetup.setUrl(new URL(requestSetup.getHost() +"session/currentPlayerStatus/"+clientPlayerID));
+        requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
+        HttpURLConnection con = requestSetup.getCon();
+        con.setRequestMethod("PUT");
+        con.setConnectTimeout(500000);
+        con.setReadTimeout(500000);
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        con.disconnect();
     }
 
     

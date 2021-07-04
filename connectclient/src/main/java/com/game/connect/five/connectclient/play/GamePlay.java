@@ -10,6 +10,7 @@ import com.game.connect.five.connectclient.model.Game;
 import com.game.connect.five.connectclient.service.GetCalls;
 import com.game.connect.five.connectclient.service.PutCalls;
 import com.game.connect.five.connectclient.util.ResponseMapper;
+import com.game.connect.five.connectclient.util.UpdateCurrentPlayerStatusThread;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -57,33 +58,52 @@ public class GamePlay {
         }
         if (this.game.getGameState().equals(GameState.FULL.name())) {
             System.out.println("Already two players in game");
+            System.exit(0);
         }
         if (this.game.getGameState().equals(GameState.INVALID.name())) {
             System.out.println("Game status invalid check or restart server");
+            System.exit(0);
         }
+        //this.startPlayerSession(30);
         for (int i = 3; i > 0; i--) {
             Thread.sleep(1000);
             System.out.println("Starting Game in " + i + "...");
         }
         // Step 4 Play game
         boolean winnerFlag = false;
-        int i = 0;
+        int i = 0,j=0;
         while (winnerFlag == false) {
             i = 0;
+            j=0;
+        Thread thread = new Thread(new UpdateCurrentPlayerStatusThread(this.putCalls, this.game.getClientPlayerID()));
+        thread.start();    
             while (true) {
 
-                String currentPlayerStatus = this.pollGame();
+                String response = this.pollGame();
+                String currentPlayerId = responseMapper.getCurrentPlayer(response);
+                String playerStatus=responseMapper.getCurrentPlayerStatus(response);
+                this.updateOpponentStatus();
                 if(this.game.getWinningPlayerId() != null)
                 {
                      winnerFlag=true;
                      break;
                 }
-                if (currentPlayerStatus.equals(this.game.getClientPlayerID())) {
+                if(j==2)
+                {
+                    this.game.setWinningPlayerId(this.game.getClientPlayerID()); 
+                    System.out.println("Opponent Disconnected !!!!");
+                    winnerFlag=true;
+                     break;
+                }
+                if (currentPlayerId.equals(this.game.getClientPlayerID())) {
                     break;
                 }
-                Thread.sleep(1000);
-                if (i % 20 == 0) {
+                Thread.sleep(2000);
+                if (i % 10 == 0) {
                      System.out.println("Waiting for opponent to make the move ...");
+                }
+                if(playerStatus.equals("Inactive")){
+                    j++;
                 }
                 i++;
 
@@ -91,10 +111,13 @@ public class GamePlay {
             if(winnerFlag){
                 break;
             }
+            
             System.out.println();
             this.displayBoard();
             System.out.println();
+            
             do {
+                
                 System.out.print("Make your move --> Enter Column : ");
                 String move = String.valueOf(sc.next());
                 try{
@@ -103,6 +126,7 @@ public class GamePlay {
                     System.out.println("Error in Input : Enter a number  ");
                     continue;
                 }
+                
                 String updateResponse = this.updateBoard(move);
                 System.out.println(updateResponse);
                 if (updateResponse.equals("INVALID_COLUMN")) {
@@ -114,6 +138,7 @@ public class GamePlay {
                 }
                 break;   
             } while (true);
+            
             System.out.println();
             this.displayBoard();
             System.out.println();
@@ -121,6 +146,14 @@ public class GamePlay {
         //Step 5 Display winner
         this.printWinner();   
     }
+
+    
+
+    private void updateOpponentStatus() throws Exception {
+        this.putCalls.callOpponentUpdateStatus(this.game.getClientPlayerID());
+    }
+
+
 
     private void printWinner() {
         System.out.println(this.game.getClientPlayerID());
@@ -137,8 +170,9 @@ public class GamePlay {
     }
 
     private String pollGame() throws Exception {
-        String playerId = responseMapper.getCurrentPlayer(getCalls.callBoardStatusApi());
-        return playerId;
+        String response=getCalls.callBoardStatusApi();
+        
+        return response;
     }
 
     private void displayBoard() throws IOException {
