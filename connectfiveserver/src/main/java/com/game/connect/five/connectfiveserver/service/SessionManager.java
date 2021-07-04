@@ -5,7 +5,12 @@ import com.game.connect.five.connectfiveserver.model.Game;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 @Component
+@AllArgsConstructor
+@NoArgsConstructor
 public class SessionManager {
 
     @Autowired
