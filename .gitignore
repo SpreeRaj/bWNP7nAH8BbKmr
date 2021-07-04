@@ -23,3 +23,12 @@
 hs_err_pid*
 .vscode/*
 
+
+connectfiveserver/bin/*
+connectclient/target/*
+connectclient/.settings/*
+connectclient/HELP.md
+connectclient/.classpath
+connectclient/.factorypath
+connectfiveserver/bin/*
+

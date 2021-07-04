@@ -1,20 +1,16 @@
 package com.game.connect.five.connectfiveserver.controller;
 
-import java.util.Map;
-
-import javax.websocket.server.PathParam;
-
 import com.game.connect.five.connectfiveserver.model.Game;
 import com.game.connect.five.connectfiveserver.model.GameBoardSize;
 import com.game.connect.five.connectfiveserver.model.Player;
 import com.game.connect.five.connectfiveserver.service.GameManager;
+import com.game.connect.five.connectfiveserver.service.SessionManager;
+import com.game.connect.five.connectfiveserver.util.BoardHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,6 +24,10 @@ public class GameController {
     GameManager gameManager;
     @Autowired
     Game game;
+    @Autowired
+    BoardHandler boardHandler;
+    @Autowired
+    SessionManager sessionManager;
 
     @GetMapping("/welcome")
     public String helloWorld() {
@@ -40,9 +40,15 @@ public class GameController {
 
     }
 
+    @GetMapping("/getBoardStatus")
+    public @ResponseBody BoardHandler getBoardStatus() {
+        return boardHandler;
+
+    }
+
     @PutMapping("/startNewGame")
-    public @ResponseBody Game StartNewGame(@RequestBody GameBoardSize gameBoardSize) {
-        String status = gameManager.startNewGame(gameBoardSize);
+    public @ResponseBody Game StartNewGame(@RequestParam int row, @RequestParam int column) {
+        String status = gameManager.startNewGame(new GameBoardSize(row,column));
         return game;
     }
 
@@ -56,10 +62,12 @@ public class GameController {
             return "Game Full";
     }
 
-    @PostMapping("/move/{playerId}")
-    public @ResponseBody Game makeMove(@RequestParam int column, @PathVariable String playerId) {
+    @PutMapping("/move/{playerId}")
+    public @ResponseBody String makeMove(@RequestParam int column, @PathVariable String playerId) {
         String status = gameManager.updateBoard(column,playerId);
-        return game;
+        return status;
     }
+
+    
 
 }

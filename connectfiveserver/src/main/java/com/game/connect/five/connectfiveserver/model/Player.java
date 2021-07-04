@@ -2,8 +2,6 @@ package com.game.connect.five.connectfiveserver.model;
 
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -23,5 +21,6 @@ public class Player {
    private String playerName;
    private String playerTokenColor;
    private String playerStatus;
+   private int playerSessionCounter;
     
 }
