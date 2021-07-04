@@ -71,7 +71,6 @@ public class GameManager {
             String addTokenRespnse=this.boardHandler.addToken(column,playerId);
             if(!(addTokenRespnse.equals(AddTokenResponse.TOKEN_ADDED.name())))
                 return addTokenRespnse;
-            
         }
         else{
             return AddTokenResponse.WRONG_TURN.name();
