@@ -62,14 +62,17 @@ public class GameManager {
     }
 
     public String updateBoard(int column, String playerId) {
-       
+        boolean flagTokenAdded=true;
         if (!(this.game.getPlayer1().getUniqueID().equals(playerId)
                 || this.game.getPlayer2().getUniqueID().equals(playerId))) {
                     
                 return AddTokenResponse.INVALID_PLAYER.name(); 
         }
         else if(this.boardHandler.getCurrentPlayer().getUniqueID().equals(playerId)){
-            this.boardHandler.addToken(column,playerId);
+            String addTokenRespnse=this.boardHandler.addToken(column,playerId);
+            if(!(addTokenRespnse.equals(AddTokenResponse.TOKEN_ADDED.name())))
+                return addTokenRespnse;
+            
         }
         else{
             return AddTokenResponse.WRONG_TURN.name();

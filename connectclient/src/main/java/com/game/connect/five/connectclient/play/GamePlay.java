@@ -69,11 +69,8 @@ public class GamePlay {
         // Step 4 Play game
         String winner = null;
         int i = 0;
-        do {
-            System.out.println();
-            this.displayBoard();
-            System.out.println();
-            
+        while (winner == null) {
+            i=0;
             while (true) {
 
                 
@@ -82,18 +79,23 @@ public class GamePlay {
                     break;
                 }
                 Thread.sleep(1000);
-                if(i%10==0){
-                    System.out.println("Waiting for opponent to make the move ...");
+                if(i%15==0){
+                  //  System.out.println("Waiting for opponent to make the move ...");
                 }
                 i++;
 
             }
-
+            System.out.println();
+            this.displayBoard();
+            System.out.println();
             System.out.print("Make your move --> Enter Column : ");
             String move = String.valueOf(sc.next().charAt(0));
             String updateResponse = this.updateBoard(move);
             System.out.println(updateResponse);
-        } while (winner == null);
+            System.out.println();
+            this.displayBoard();
+            System.out.println();
+        } 
     }
 
     private String updateBoard(String move) throws IOException {
