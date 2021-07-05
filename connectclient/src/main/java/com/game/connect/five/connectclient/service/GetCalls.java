@@ -64,7 +64,8 @@ public class GetCalls {
         return response.toString();
     }
 
-    public String callBoardStatusApi() throws Exception {
+    public String callBoardStatusApi(){
+        try{
         requestSetup.setUrl(new URL(requestSetup.getHost() + "getBoardStatus"));
         requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
         HttpURLConnection con = requestSetup.getCon();
@@ -82,6 +83,10 @@ public class GetCalls {
         con.disconnect();
        // System.out.println(response.toString());
         return response.toString();
+    }catch(Exception e){
+
+    }
+        return null;
     }
 
 }

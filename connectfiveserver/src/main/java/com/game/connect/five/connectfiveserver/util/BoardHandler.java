@@ -33,7 +33,7 @@ public class BoardHandler {
 
         String[][] board = this.game.getGameBoard().getBoard();
 
-        if(!(column>=1 && column<=this.game.getGameBoard().getColumn()-1))
+        if(!(column>=1 && column<=this.game.getGameBoard().getColumn()))
             return AddTokenResponse.INVALID_COLUMN.name();
 
         if (this.boardCapacity > 0) {

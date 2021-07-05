@@ -34,12 +34,12 @@ public class GamePlay {
     public void gamePlayHandler() throws Exception {
 
         // Step 1 loadWelcomeScreen
-        try{
+        try {
             this.loadWelcomeScreen();
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Error Connecting to Server : Please check server Status");
             System.exit(0);
-        }    
+        }
 
         // Step 2 identifyGameStatus
         this.game.setGameState(this.identifyGameStatus());
@@ -64,69 +64,68 @@ public class GamePlay {
             System.out.println("Game status invalid check or restart server");
             System.exit(0);
         }
-        //this.startPlayerSession(30);
+        // this.startPlayerSession(30);
         for (int i = 3; i > 0; i--) {
             Thread.sleep(1000);
             System.out.println("Starting Game in " + i + "...");
         }
         // Step 4 Play game
         boolean winnerFlag = false;
-        int i = 0,j=0;
+        int i = 0, j = 0;
         while (winnerFlag == false) {
             i = 0;
-            j=0;
-        Thread thread = new Thread(new UpdateCurrentPlayerStatusThread(this.putCalls, this.game.getClientPlayerID()));
-        thread.start();    
+            j = 0;
+            Thread thread = new Thread(
+                    new UpdateCurrentPlayerStatusThread(this.putCalls, this.game.getClientPlayerID()));
+            thread.start();
             while (true) {
 
                 String response = this.pollGame();
                 String currentPlayerId = responseMapper.getCurrentPlayer(response);
-                String playerStatus=responseMapper.getCurrentPlayerStatus(response);
+                String playerStatus = responseMapper.getCurrentPlayerStatus(response);
                 this.updateOpponentStatus();
-                if(this.game.getWinningPlayerId() != null)
-                {
-                     winnerFlag=true;
-                     break;
+                if (this.game.getWinningPlayerId() != null) {
+                    winnerFlag = true;
+                    break;
                 }
-                if(j==2)
-                {
-                    this.game.setWinningPlayerId(this.game.getClientPlayerID()); 
+                if (j == 2) {
+                    this.game.setWinningPlayerId(this.game.getClientPlayerID());
                     System.out.println("Opponent Disconnected !!!!");
-                    winnerFlag=true;
-                     break;
+                    winnerFlag = true;
+                    break;
                 }
                 if (currentPlayerId.equals(this.game.getClientPlayerID())) {
                     break;
                 }
                 Thread.sleep(2000);
                 if (i % 10 == 0) {
-                     System.out.println("Waiting for opponent to make the move ...");
+                    System.out.println("Waiting for opponent to make the move ...");
                 }
-                if(playerStatus.equals("Inactive")){
+                if (playerStatus.equals("Inactive")) {
                     j++;
                 }
                 i++;
 
             }
-            if(winnerFlag){
+            if (winnerFlag) {
                 break;
             }
-            
+
             System.out.println();
             this.displayBoard();
             System.out.println();
-            
+
             do {
-                
+
                 System.out.print("Make your move --> Enter Column : ");
                 String move = String.valueOf(sc.next());
-                try{
+                try {
                     Integer.parseInt(move);
-                }catch(Exception e){
+                } catch (Exception e) {
                     System.out.println("Error in Input : Enter a number  ");
                     continue;
                 }
-                
+
                 String updateResponse = this.updateBoard(move);
                 System.out.println(updateResponse);
                 if (updateResponse.equals("INVALID_COLUMN")) {
@@ -136,32 +135,36 @@ public class GamePlay {
                     this.pollGame();
                     winnerFlag = true;
                 }
-                break;   
+                break;
             } while (true);
-            
+
             System.out.println();
             this.displayBoard();
             System.out.println();
         }
-        //Step 5 Display winner
-        this.printWinner();   
+        // Step 5 Display winner
+        this.printWinner();
     }
-
-    
 
     private void updateOpponentStatus() throws Exception {
         this.putCalls.callOpponentUpdateStatus(this.game.getClientPlayerID());
     }
 
-
-
     private void printWinner() {
         System.out.println(this.game.getClientPlayerID());
-        System.out.println(this.game.getWinningPlayerId());
-        if(this.game.getClientPlayerID().equals(this.game.getWinningPlayerId()))
+       
+        if (this.game.getClientPlayerID().equals(this.game.getWinningPlayerId())) {
+            System.out.println(this.game.getWinningPlayerId());
             System.out.println("You Win !!!");
-        else
-            System.out.println("You Lose !!!"); 
+            System.exit(0);
+        }else if(this.game.getWinningPlayerId()==null){
+            System.out.println("You Win !!! :))");
+            System.exit(0);
+        }
+         else {
+            System.out.println("You Lose !!!");
+            System.exit(0);
+        }
     }
 
     private String updateBoard(String move) throws IOException {
@@ -170,8 +173,10 @@ public class GamePlay {
     }
 
     private String pollGame() throws Exception {
-        String response=getCalls.callBoardStatusApi();
-        
+        String response;
+        do {
+            response = getCalls.callBoardStatusApi();
+        } while (response == null);
         return response;
     }
 
@@ -245,7 +250,7 @@ public class GamePlay {
 
     private void loadWelcomeScreen() throws IOException {
         // Starting Game
-        String response=getCalls.callWelcomeApi();
+        String response = getCalls.callWelcomeApi();
         System.out.println("*********************************");
         System.out.print("*    ");
         System.out.print(response);
