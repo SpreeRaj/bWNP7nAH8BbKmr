@@ -19,7 +19,7 @@ mvn spring-boot:run
 ```
 -To Run Game with JAR files
 ```sh
-cd game_jars
+cd game_jars_updated
 [For Server]: 
 java -jar connectfiveserver.jar
 [For Clients]:
