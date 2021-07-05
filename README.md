@@ -35,13 +35,15 @@ java -jar connectclient.jar
 ### 1. Run Server in one terminal
 ![alt text](https://github.com/SpreeRaj/bWNP7nAH8BbKmr/blob/main/Screenshots/ServerStartup.PNG)
 ### 2. Run Client for Player-1
-![alt text](https://github.com/SpreeRaj/bWNP7nAH8BbKmr/blob/main/Screenshots/GamePlay.PNG)
+![alt text](https://github.com/SpreeRaj/bWNP7nAH8BbKmr/blob/main/Screenshots/ClientStartip.PNG)
 ### 3. Enter Player-1 Details
 > Note:  Perform step-4 after terminal prompts "Waiting for player 2"     
 
 ![alt text](https://github.com/SpreeRaj/bWNP7nAH8BbKmr/blob/main/Screenshots/ClientStartupPlayer1.PNG)
 ### 4. Run Client for Player-2 in Separate Terminal
 ![alt text](https://github.com/SpreeRaj/bWNP7nAH8BbKmr/blob/main/Screenshots/ClientStartupPlayer2.PNG)
+### 5. Game play
+![alt text](https://github.com/SpreeRaj/bWNP7nAH8BbKmr/blob/main/Screenshots/GamePlay.PNG)
 
 ## Testing
 
@@ -52,7 +54,7 @@ java -jar connectclient.jar
 
 
 ## Swagger URL
-- Swaggger is enabled can be viewed after server startup at: 
+- Swaggger is enabled and can be viewed after server startup at: 
 >http://localhost:8080/swagger-ui.html
 
 >http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
@@ -61,12 +63,14 @@ java -jar connectclient.jar
 
 ## Additional Notes :
 - If one player disconnects game takes 6 seconds to declare other player.
-- To start a new game shutdown both server and clients and follow steps again of  `Play Game`
+- To start a new game shutdown both server and clients and follow steps again. of  `Play Game`
+- Tests only involve unit test for 2 Manager Classes. Inegeration tests would need further upgrade.
+- `Know issue`: Cannot Start two clients simultaneously. Need to finish entering details of Player 1 before starting client 2.
 
 
 
 
-
+# Enjoy the Game  !!!! :)
 
 ## License
 
