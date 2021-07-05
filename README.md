@@ -23,7 +23,7 @@ cd game_jars_updated
 [For Server]: 
 java -jar connectfiveserver.jar
 [For Clients]:
-java -jar connectclient.jar
+java -jar connectfiveclient.jar
 ```
 
 ## Play game

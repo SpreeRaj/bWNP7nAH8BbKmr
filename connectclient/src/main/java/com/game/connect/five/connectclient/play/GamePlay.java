@@ -77,7 +77,10 @@ public class GamePlay {
             j = 0;
             Thread thread = new Thread(
                     new UpdateCurrentPlayerStatusThread(this.putCalls, this.game.getClientPlayerID()));
-            thread.start();
+            try
+            {
+                thread.start();
+            }catch(Exception e){}
             while (true) {
 
                 String response = this.pollGame();

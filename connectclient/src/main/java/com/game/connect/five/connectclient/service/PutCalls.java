@@ -23,10 +23,10 @@ public class PutCalls {
     @Autowired
     RequestSetup requestSetup;
 
-    //URLEncoder.encode(pair.getName(), "UTF-8")
+    // URLEncoder.encode(pair.getName(), "UTF-8")
 
     public String setupGame(int row, int column) throws Exception {
-        requestSetup.setUrl(new URL(requestSetup.getHost() + "startNewGame?row="+row+"&column="+column));
+        requestSetup.setUrl(new URL(requestSetup.getHost() + "startNewGame?row=" + row + "&column=" + column));
         requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
         HttpURLConnection con = requestSetup.getCon();
         con.setRequestMethod("PUT");
@@ -41,12 +41,13 @@ public class PutCalls {
         in.close();
 
         con.disconnect();
-        //System.out.println(response.toString());
+        // System.out.println(response.toString());
         return response.toString();
     }
 
-    public String addNewPlayer(String playerName, String playerToken)throws Exception {
-        requestSetup.setUrl(new URL(requestSetup.getHost() + "addPlayerDetails?playerName="+playerName+"&playerTokenColor="+playerToken));
+    public String addNewPlayer(String playerName, String playerToken) throws Exception {
+        requestSetup.setUrl(new URL(requestSetup.getHost() + "addPlayerDetails?playerName=" + playerName
+                + "&playerTokenColor=" + playerToken));
         requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
         HttpURLConnection con = requestSetup.getCon();
         con.setRequestMethod("PUT");
@@ -66,7 +67,7 @@ public class PutCalls {
     }
 
     public String callMakeMoveApi(String move, String playerId) throws IOException {
-        requestSetup.setUrl(new URL(requestSetup.getHost() +"/move/"+playerId+ "?column="+move));
+        requestSetup.setUrl(new URL(requestSetup.getHost() + "/move/" + playerId + "?column=" + move));
         requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
         HttpURLConnection con = requestSetup.getCon();
         con.setRequestMethod("PUT");
@@ -81,53 +82,52 @@ public class PutCalls {
         in.close();
 
         con.disconnect();
-        //System.out.println(response.toString());
+        // System.out.println(response.toString());
         return response.toString();
     }
 
     public void callOpponentUpdateStatus(String clientPlayerID) throws Exception {
-        requestSetup.setUrl(new URL(requestSetup.getHost() +"session/updateOpponentStatus/"+clientPlayerID));
-        requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
-        HttpURLConnection con = requestSetup.getCon();
-        con.setRequestMethod("PUT");
-        con.setConnectTimeout(5000000);
-        con.setReadTimeout(5000000);
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
+        try {
+            requestSetup.setUrl(new URL(requestSetup.getHost() + "session/updateOpponentStatus/" + clientPlayerID));
+            requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
+            HttpURLConnection con = requestSetup.getCon();
+            con.setRequestMethod("PUT");
+            con.setConnectTimeout(5000);
+            con.setReadTimeout(5000);
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
 
-        con.disconnect();
-        //System.out.println(response.toString());
-        //return response.toString();
+            con.disconnect();
+        } catch (Exception e) {
+        }
+        // System.out.println(response.toString());
+        // return response.toString();
     }
 
-    public void callCurrentPlayerUpdateStatus(String clientPlayerID) throws Exception{
-        requestSetup.setUrl(new URL(requestSetup.getHost() +"session/currentPlayerStatus/"+clientPlayerID));
-        requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
-        HttpURLConnection con = requestSetup.getCon();
-        con.setRequestMethod("PUT");
-        con.setConnectTimeout(500000);
-        con.setReadTimeout(500000);
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+    public void callCurrentPlayerUpdateStatus(String clientPlayerID) throws Exception {
+        try {
+            requestSetup.setUrl(new URL(requestSetup.getHost() + "session/currentPlayerStatus/" + clientPlayerID));
+            requestSetup.setCon((HttpURLConnection) requestSetup.getUrl().openConnection());
+            HttpURLConnection con = requestSetup.getCon();
+            con.setRequestMethod("PUT");
+            con.setConnectTimeout(500000);
+            con.setReadTimeout(500000);
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            con.disconnect();
+        } catch (Exception e) {
         }
-        in.close();
-
-        con.disconnect();
     }
-
-    
-
-    
-
-
-
 
 }
